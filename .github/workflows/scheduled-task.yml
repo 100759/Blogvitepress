@@ -2,7 +2,7 @@ name: Scheduled Task
 
 on:
   schedule:
-    - cron: '0 * * * *' # 每小时执行一次，例如每小时的第0分钟
+    - cron: '1 * * * *' # 每小时执行一次，例如每小时的第0分钟
 
 jobs:
   scheduled-task:
