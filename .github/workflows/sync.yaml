@@ -1,11 +1,6 @@
 name: Sync Docs And Deploy To Github Pages
 
 on:
-  # 允许手动push触发
-#  push:
-#    branches:
-#      - master
-  # 允许外部仓库事件触发
   repository_dispatch:
     types:
       - sync-deploy
@@ -16,7 +11,6 @@ jobs:
     strategy:
       matrix:
         node-version: [20]
-
     steps:
       - uses: actions/checkout@v4
       - name: Install pnpm
@@ -28,7 +22,6 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install --prod
-
       - name: 拉取语雀&Notion&FlowUs&飞书的文档
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
@@ -40,29 +33,24 @@ jobs:
           COS_HOST: ${{ secrets.COS_HOST }}
         run: |
           pnpm run sync:notion
-
       - name: 配置Git用户名邮箱
         run: |
           git config --global user.name "100759"
           git config --global user.email "2827162018@qq.com"
-
       - name: 提交拉取的文档到GitHub仓库
         run: |
           echo `date +"%Y-%m-%d %H:%M:%S"` begin > time.txt
           git add .
           git commit -m "Refresh elog.cache.json" -a
-
       - name: 推送文档到仓库
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: 生成静态文件
         env:
-          YUQUE_TOKEN: ${{ secrets.YUQUE_TOKEN }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         run: |
           pnpm run docs:build
-
       - name: 部署到Github Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
