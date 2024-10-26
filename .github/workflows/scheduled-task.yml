@@ -1,0 +1,20 @@
+name: Scheduled Task
+
+on:
+  schedule:
+    - cron: '0 * * * *' # 每小时执行一次，例如每小时的第0分钟
+
+jobs:
+  scheduled-task:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run your command
+      run: |
+        # 在这里写上你想要执行的命令
+        echo "定时任务执行时间: $(date)"
+        # 例如，运行一个脚本或命令
+        #./your-script.sh
+        elog sync -e.elog.env
